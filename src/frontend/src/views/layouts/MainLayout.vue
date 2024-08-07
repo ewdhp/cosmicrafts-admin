@@ -1,8 +1,15 @@
+<script setup lang="ts">
+import ViewLayout from './ViewLayout.vue';
+</script>
+
 <template>
   <div class="dashboard-container">
     <!-- Left Panel -->
     <aside class="left-panel">
-      <img src="@/assets/icons/logo.svg" alt="Logo Icon"/>
+      <div style="margin-top: 15px; margin-left: 5px;">
+        <img src="@/assets/icons/logo.svg" alt="Logo Icon"/>
+      </div>
+      
       <div class="nav-wrapper">
         <nav class="nav-sections">
           <ul>
@@ -47,7 +54,8 @@
       <!-- Main Content -->
       <main class="main-content">
         <!-- Dynamic content goes here -->
-        <router-view />
+         <router-view />
+         
       </main>
     </div>
   </div>
@@ -64,7 +72,8 @@
 .left-panel {
   width: 100px;
   color: #fff;
-  padding: 20px;
+  padding-left: 18px;
+   margin-right: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,28 +82,34 @@
     display: flex;
     justify-content: center;
     padding-top: 20px;
+    
   }
 
   .nav-sections {
     width: 100%;
     
+    
     ul {
       list-style: none;
-      padding: 0;
+      padding: 0px;
       margin: 0;
+     
       
       li {
-        margin: 10px 0;
+        margin-bottom: 15px ;
+        
         a {
           text-decoration: none;
           color: inherit;
           display: block;
+          
         }
 
         .nav-item {
           display: flex;
           align-items: center;
           padding: 10px;
+        
           
           background-color: #293646;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -134,9 +149,10 @@
   }
 
   .main-content {
-    background-color: #252931;
+    background-color: #bec4cc;
     border-radius: 8px;
-    padding: 20px;
+    padding: 10px 15px 10px 15px;
+    margin-top: 20px;
     flex-grow: 1;
     border: 1px solid #1c1f22; /* Light gray border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Moderate shadow */
