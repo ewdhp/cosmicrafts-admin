@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import ViewLayout from './ViewLayout.vue';
 </script>
-
 <template>
   <div class="dashboard-container">
-    <!-- Left Panel -->
     <aside class="left-panel">
       <div style="margin-top: 15px; margin-left: 5px;">
         <img src="@/assets/icons/logo.svg" alt="Logo Icon"/>
@@ -41,8 +38,6 @@ import ViewLayout from './ViewLayout.vue';
         </nav>
       </div>
     </aside>
-
-    <!-- Right Panel -->
     <div class="right-panel">
       <!-- Top Nav -->
       <header class="top-nav">
@@ -60,16 +55,14 @@ import ViewLayout from './ViewLayout.vue';
     </div>
   </div>
 </template>
-
 <style scoped lang="scss">
 .dashboard-container {
   display: flex;
   background: linear-gradient(to bottom, #161a20, #3d475a);
   height: 100vh;
 }
-
-// Left Panel
 .left-panel {
+
   width: 100px;
   color: #fff;
   padding-left: 18px;
@@ -84,47 +77,34 @@ import ViewLayout from './ViewLayout.vue';
     padding-top: 20px;
     
   }
-
   .nav-sections {
-    width: 100%;
-    
-    
+    width: 100%;    
     ul {
       list-style: none;
       padding: 0px;
-      margin: 0;
-     
-      
+      margin: 0;     
       li {
-        margin-bottom: 15px ;
-        
+        margin-bottom: 15px ;       
         a {
           text-decoration: none;
           color: inherit;
-          display: block;
-          
+          display: block;          
         }
-
         .nav-item {
           display: flex;
           align-items: center;
-          padding: 10px;
-        
-          
+          padding: 10px;                  
           background-color: #293646;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           border-radius: 4px;
-          transition: background-color 0.5s;
-          
+          transition: background-color 0.5s;          
           img {
             margin-right: 10px;
           }
-
           span {
             font-size: 16px;
             color: #292929; /* Gray scale font color */
           }
-
           &:hover {
             background-color: #495057;
           }
@@ -133,9 +113,8 @@ import ViewLayout from './ViewLayout.vue';
     }
   }
 }
-
-// Right Panel
 .right-panel {
+
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -146,8 +125,7 @@ import ViewLayout from './ViewLayout.vue';
     justify-content: flex-end;
     align-items: center;
     padding-bottom: 20px;
-  }
-
+  }  
   .main-content {
     background-color: #bec4cc;
     border-radius: 8px;
