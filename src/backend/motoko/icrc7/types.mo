@@ -4,6 +4,7 @@ import Nat64 "mo:base/Nat64";
 import Text "mo:base/Text";
 import Blob "mo:base/Blob";
 import Principal "mo:base/Principal";
+import Time "mo:base/Time";
 
 module {
     public type Subaccount = Blob;
@@ -43,18 +44,10 @@ module {
 
     public type MetadataArray = [(Text, Metadata)];
 
-    public type Metadata = { 
-        #Nat: Nat; 
-        #Int: Int; 
-        #Text: Text; 
-        #Blob: Blob; 
-        #MetadataArray: MetadataArray 
-    };
-
     public type TokenMetadata = {
         tokenId: TokenId;
         owner: Account;
-        metadata: [(Text, Metadata)];
+        metadata: Metadata;
     };
 
     public type Result<S, E> = {
@@ -74,13 +67,13 @@ module {
     public type MintArgs = {
         to: Account;
         token_id: TokenId;
-        metadata: [(Text, Metadata)];
+        metadata: Metadata;
     };
 
     public type UpgradeArgs = {
         from: Account;
         token_id: TokenId;
-        metadata: [(Text, Metadata)];
+        metadata: Metadata;
     };
 
     public type TransferId = Nat;
@@ -137,7 +130,7 @@ module {
         #GenericError: { error_code: Nat; message: Text };
     };
 
-    public type MetadataResult = Result<[(Text, Metadata)], CallError>;
+    public type MetadataResult = Result<Metadata, CallError>;
 
     public type OwnerResult = Result<Account, CallError>;
 
@@ -247,4 +240,155 @@ module {
     };
 
     public type OpenReceipt = Result<[(Text, Nat)], TransferError>;
+
+
+// New Types of Metadata
+
+// Root Type for NFT Metadata
+public type Metadata = {
+    general: GeneralMetadata;
+    basic: ?BasicMetadata;
+    skills: ?SkillMetadata;
+    skins: ?SkinMetadata;
+    soul: ?SoulMetadata;
+};
+
+// General Metadata
+public type GeneralMetadata = {
+    category: ?Category;
+    rarity: ?Nat;
+    faction: ?Faction;
+    id: Nat;
+    name: Text;
+    description: Text;
+    image: Text;
+};
+
+public type Faction = {
+    #Cosmicon;
+    #Spirat;
+    #Webe;
+    #Spade;
+    #Arch;
+    #Celestial;
+    #Neutral;
+};
+
+// Basic Metadata
+public type BasicMetadata = {
+    level: Nat;
+    health: Nat;
+    damage: Nat;
+};
+
+// Category Type
+public type Category = {
+    #character: CharacterMetadata;
+    #unit: Unit;
+    #avatar: AvatarMetadata;
+    #chest: ChestMetadata;
+    #trophy: TrophyMetadata;
+};
+
+// Character Metadata
+public type CharacterMetadata = {
+    general: GeneralMetadata;
+    basic: ?BasicMetadata;
+    skills: ?SkillMetadata;
+    skins: ?SkinMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Unit Type
+public type Unit = {
+    #spaceship: ?SpaceshipMetadata;
+    #station: ?StationMetadata;
+    #weapon: ?WeaponMetadata;
+};
+
+// Spaceship Metadata
+public type SpaceshipMetadata = {
+    general: GeneralMetadata;
+    basic: ?BasicMetadata;
+    skills: ?SkillMetadata;
+    skins: ?SkinMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Station Metadata
+public type StationMetadata = {
+    general: GeneralMetadata;
+    basic: ?BasicMetadata;
+    skills: ?SkillMetadata;
+    skins: ?SkinMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Weapon Metadata
+public type WeaponMetadata = {
+    general: GeneralMetadata;
+    basic: ?BasicMetadata;
+    skills: ?SkillMetadata;
+    skins: ?SkinMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Avatar Metadata
+public type AvatarMetadata = {
+    general: GeneralMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Chest Metadata
+public type ChestMetadata = {
+    general: GeneralMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Trophy Metadata
+public type TrophyMetadata = {
+    general: GeneralMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Skin Metadata
+public type SkinMetadata = {
+    general: GeneralMetadata;
+    soul: ?SoulMetadata;
+};
+
+// Soul Metadata
+public type SoulMetadata = {
+    birth: Time.Time;
+    gamesPlayed: ?Nat;
+    totalKills: ?Nat;
+    totalDamageDealt: ?Nat;
+};
+
+// Skill Metadata
+public type SkillMetadata = {
+    #shield: ?ShieldMetadata;
+    #evasion: ?EvasionMetadata;
+    #criticalStrike: ?CriticalStrikeMetadata;
+};
+
+// Shield Skill Metadata
+public type ShieldMetadata = {
+    // Define fields specific to the shield skill
+    // Placeholder fields for future expansion
+};
+
+// Evasion Skill Metadata
+public type EvasionMetadata = {
+    // Define fields specific to the evasion skill
+    // Placeholder fields for future expansion
+};
+
+// Critical Strike Skill Metadata
+public type CriticalStrikeMetadata = {
+    // Define fields specific to the critical strike skill
+    // Placeholder fields for future expansion
+};
+
+
 };

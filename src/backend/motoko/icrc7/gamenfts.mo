@@ -29,6 +29,26 @@ shared actor class GameNFTs(collectionOwner: Types.Account, init: Types.Collecti
   private stable var approvalSequentialIndex: Nat = 0;
   private stable var transactionSequentialIndex: Nat = 0;
 
+  public type Metadata = Types.Metadata;
+  public type GeneralMetadata = Types.GeneralMetadata;
+  public type BasicMetadata = Types.BasicMetadata;
+  public type Category = Types.Category;
+  public type CharacterMetadata = Types.CharacterMetadata;
+  public type Unit = Types.Unit;
+  public type SpaceshipMetadata = Types.SpaceshipMetadata;
+  public type StationMetadata = Types.StationMetadata;
+  public type WeaponMetadata = Types.WeaponMetadata;
+  public type AvatarMetadata = Types.AvatarMetadata;
+  public type ChestMetadata = Types.ChestMetadata;
+  public type TrophyMetadata = Types.TrophyMetadata;
+  public type SkinMetadata = Types.SkinMetadata;
+  public type SoulMetadata = Types.SoulMetadata;
+  public type SkillMetadata = Types.SkillMetadata;
+  public type ShieldMetadata = Types.ShieldMetadata;
+  public type EvasionMetadata = Types.EvasionMetadata;
+  public type CriticalStrikeMetadata = Types.CriticalStrikeMetadata;
+  public type Faction = Types.Faction;
+
   // https://forum.dfinity.org/t/is-there-any-address-0-equivalent-at-dfinity-motoko/5445/3
   private var NULL_PRINCIPAL: Principal = Principal.fromText("aaaaa-aa");
   private var PERMITTED_DRIFT : Nat64 = 2 * 60 * 1_000_000_000; // 2 minutes in nanoseconds
@@ -520,27 +540,28 @@ shared actor class GameNFTs(collectionOwner: Types.Account, init: Types.Collecti
     return null;
   };
 
-  private func _updateToken(tokenId: Types.TokenId, newOwner: ?Types.Account, newMetadata: ?[(Text, Types.Metadata)]) {
-    let item = Trie.get(tokens, _keyFromTokenId tokenId, Nat.equal);
+private func _updateToken(tokenId: Types.TokenId, newOwner: ?Types.Account, newMetadata: ?Types.Metadata) {
+    let item = Trie.get(tokens, _keyFromTokenId(tokenId), Nat.equal);
 
     switch (item) {
-      case null {
-        return;
-      };
-      case (?_elem) {
-        //update owner
-        let newToken: Types.TokenMetadata = {
-          tokenId = _elem.tokenId;
-          owner = Utils.nullishCoalescing<Types.Account>(newOwner, _elem.owner);
-          metadata = Utils.nullishCoalescing<[(Text, Types.Metadata)]>(newMetadata, _elem.metadata);
+        case null {
+            return;
         };
+        case (?_elem) {
+            // Update owner
+            let newToken: Types.TokenMetadata = {
+                tokenId = _elem.tokenId;
+                owner = Utils.nullishCoalescing<Types.Account>(newOwner, _elem.owner);
+                metadata = Utils.nullishCoalescing<Types.Metadata>(newMetadata, _elem.metadata);
+            };
 
-        //update the token metadata
-        tokens := Trie.put(tokens, _keyFromTokenId tokenId, Nat.equal, newToken).0;
-        return;
-      }
+            // Update the token metadata
+            tokens := Trie.put(tokens, _keyFromTokenId(tokenId), Nat.equal, newToken).0;
+            return;
+        }
     };
-  };
+};
+
 
   private func _isApprovedOrOwner(spender: Types.Account, tokenId: Types.TokenId, now: Nat64): Bool {
     return _isOwner(spender, tokenId) or _isApproved(spender, tokenId, now);
@@ -841,19 +862,24 @@ shared actor class GameNFTs(collectionOwner: Types.Account, init: Types.Collecti
     return #Ok(upgradeArgs.token_id);
   };
 
-// Self-query function to get all token IDs with their respective metadata for the caller
-public query ({ caller }) func getNFTs() : async [(Types.TokenId, Types.TokenMetadata)] {
-    let entries = Iter.toArray(Trie.iter(tokens));
-    var result: [(Types.TokenId, Types.TokenMetadata)] = [];
-    for (entry in entries.vals()) {
-        let key = entry.0;
-        let value = entry.1;
-        if (value.owner.owner == caller) {
-            result := Array.append(result, [(key, value)]);
-        };
-    };
-    return result;
-};
+  // Self-query function to get all token IDs with their respective metadata for the caller
+  public query ({ caller }) func getNFTs() : async [(Types.TokenId, Types.TokenMetadata)] {
+      let entries = Iter.toArray(Trie.iter(tokens));
+      
+      // Initialize a buffer with an estimated size based on the number of entries
+      let resultBuffer = Buffer.Buffer<(Types.TokenId, Types.TokenMetadata)>(entries.size());
+      
+      for (entry in entries.vals()) {
+          let key = entry.0;
+          let value = entry.1;
+          if (value.owner.owner == caller) {
+              resultBuffer.add((key, value));
+          };
+      };
+      
+      // Convert the buffer to an array before returning
+      return Buffer.toArray(resultBuffer);
+  };
 
 
   // Stable map to store the principal IDs of callers who have minted a deck
@@ -880,10 +906,37 @@ public shared({ caller }) func mintDeck(): async (Bool, Text, [Types.TokenId]) {
         let (name, damage, hp, rarity) = units[i];
         // Increment the UUID for each NFT
         let uuid = initialUUID + i;
+        let generalMetadata: Types.GeneralMetadata = {
+            category = ?#unit(#spaceship(null));
+            rarity = ?rarity;
+            faction = ?#Cosmicon;
+            id = uuid;
+            name = name;
+            description = name # " NFT";
+            image = "url_to_image";
+        };
+        let spaceshipMetadata: Types.SpaceshipMetadata = {
+            general = generalMetadata;
+            basic = ?{
+                level = 1;
+                health = hp;
+                damage = damage;
+            };
+            skills = null; // Set to null for now, can be updated later
+            skins = null;  // Set to null for now, can be updated later
+            soul = null;   // Set to null for now, can be updated later
+        };
+        let metadata: Types.Metadata = {
+            general = spaceshipMetadata.general;
+            basic = spaceshipMetadata.basic;
+            skills = spaceshipMetadata.skills;
+            skins = spaceshipMetadata.skins;
+            soul = spaceshipMetadata.soul;
+        };
         let _mintArgs: Types.MintArgs = {
             to = { owner = caller; subaccount = null };
             token_id = uuid;
-            metadata = Utils.getBaseMetadataWithAttributes(rarity, i + 1, name, damage, hp);
+            metadata = metadata; // Directly use the new NFTMetadata type
         };
         _deck.add(_mintArgs);
         uuids.add(uuid); // Collect the UUIDs
