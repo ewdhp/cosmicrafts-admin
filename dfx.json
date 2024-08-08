@@ -1,7 +1,7 @@
 {
   "canisters": {
     "cosmicrafts": {
-      "main": "src/backend/motoko/cosmicrafts/main.mo",
+      "main": "src/backend/motoko/main.mo",
       "type": "motoko"
     },
     "frontend": {
