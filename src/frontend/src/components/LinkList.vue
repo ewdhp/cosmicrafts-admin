@@ -1,8 +1,10 @@
 <template>
   <div :class="['link-list', orientationClass]">
     <ul>
-      <li v-for="(item, index) in links" :key="index" :class="{ active: isActive(item.path) }">
-        <a :href="item.path" @click.prevent="setActive(item.path)">
+      <li v-for="(item, index) in items" 
+      :key="index" 
+      :class="{ active: isActive(item.path) }">
+        <a :href="item.path" @click="setActive(item.path)">
           {{ item.name }}
         </a>
       </li>
@@ -12,67 +14,70 @@
 
 <script>
 export default {
+  name: 'LinkList',
   props: {
-    name: {
+    items: {
+      type: Array,
+      required: true,
+      validator: (items) => {
+        return items.every(
+          item => 'name' in item && 'path' in item);
+      }
+    },
+    orientation: {
       type: String,
-      required: true
+      default: 'vertical', // default orientation
+      validator: (value) => ['vertical', 'horizontal'].includes(value)
     }
   },
+  data() {
+    return {
+      activeLink: null
+    };
+  },
   computed: {
-    getLinks() {
-      return this.$store.getters[`linkList/${this.name}/getLinks`];
-    },
-    getOrientation() {
-      return this.$store.getters[`linkList/${this.name}/getOrientation`];
-    },
-    getActiveLink() {
-      return this.$store.getters[`linkList/${this.name}/getActiveLink`];
-    },
-    links() {
-      return this.getLinks();
-    },
-    orientation() {
-      return this.getOrientation();
-    },
-    activeLink() {
-      return this.getActiveLink();
-    },
     orientationClass() {
       return this.orientation === 'horizontal' ? 'horizontal' : 'vertical';
-    },
-    moduleNamespace() {
-      return `linkList/${this.name}`;
     }
   },
   methods: {
     setActive(path) {
-      this.$store.dispatch(`${this.moduleNamespace}/updateActiveLink`, path);
+      this.activeLink = path;
     },
     isActive(path) {
       return this.activeLink === path;
-    }
-  },
-  mounted() {
-    if (!this.activeLink || this.activeLink === '') {
-      this.setActive(this.links[0].path);
     }
   }
 };
 </script>
 
 <style scoped>
-.link-list.horizontal ul {
-  display: flex;
-  padding: 0;
+.link-list {
   list-style-type: none;
+  padding: 0;
 }
-.link-list.horizontal li {
-  margin-right: 10px;
+
+.link-list ul {
+  display: flex;
+  flex-direction: column;
 }
-.link-list.vertical ul {
-  display: block;
+
+.link-list.horizontal ul {
+  flex-direction: row;
 }
-.link-list .active {
+
+.link-list li {
+  margin: 0.5rem;
+}
+
+.link-list li a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.link-list li.active a {
   font-weight: bold;
+  color: blue;
 }
 </style>

@@ -49,12 +49,25 @@ import LinkList from '@/components/LinkList.vue';
               <img width="35" height="35"  src="@/assets/logos/twitter.png"/>
             </div>
 
-    <h1>Main Menu</h1>
-    <LinkList name="mainMenu" />
+    <h1>horizontal</h1>
+    <LinkList
+      :items="[
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Contact', path: '/contact' }
+      ]"
+      orientation="horizontal"
+    />
 
-    <h1>Module Menu</h1>
-    <LinkList name="moduleMenu" />
-
+    <h1>vertical</h1>
+    <LinkList
+      :items="[
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Contact', path: '/contact' }
+      ]"
+      orientation="vertical"
+    />
 
         </div>
       </main>
