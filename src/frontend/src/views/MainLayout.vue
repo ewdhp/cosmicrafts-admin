@@ -11,7 +11,7 @@
         <nav class="nav-sections">
           <ul>
             <li>
-              <router-link to="/dashboard">
+              <router-link to="/">
                 <div class="nav-item">
                   <img src="@/assets/icons/dashboard.svg" alt="Dashboard Icon"/>
                   <span style="color: white;">Dashboard</span>
@@ -49,7 +49,7 @@
       <!-- Main Content -->
       <main class="main-content">
         <!-- Dynamic content goes here -->
-         <router-view />
+        <router-view></router-view>
          
       </main>
     </div>

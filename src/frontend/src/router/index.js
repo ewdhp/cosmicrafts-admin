@@ -1,20 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import DashboardView from '@/views/DashboardView.vue';
-import MarketingView from '@/views/MarketingView.vue';
-import UsersView from '@/views/UsersView.vue';
+import DashboardView from '@/views/dashboard/DashboardView.vue';
+import MarkMainView from '@/views/marketing/MarkMainView.vue';
+import UsersView from '@/views/users/UsersView.vue';
 
 const routes = [
 
     {
-        path: '/dashboard',
+        path: '/',
         name: 'Dashboard',
         component: DashboardView
     },
     {
         path: '/marketing',
         name: 'Marketing',
-        component: MarketingView
+        component: MarkMainView
     },
     {
         path: '/users',

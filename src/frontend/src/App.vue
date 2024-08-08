@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { cosmicrafts } from "declarations/cosmicrafts/index";
-import MainLayout from './views/layouts/MainLayout.vue';
+import MainLayout from '@/views/MainLayout.vue';
 
 let greeting = ref("");
 
